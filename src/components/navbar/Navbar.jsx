@@ -1,9 +1,40 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 //react router link
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { logout } from "../../store/actions/auth/auth";
 
 const Navbar = () => {
+
+
+  const isLoggedIn = useSelector((state) => state.authReducer.isLoggedIn);
+
+  const dispatch = useDispatch();
+  const navigate  = useNavigate();
+
+  useEffect(() => {
+
+  }, [isLoggedIn]);
+
+  const onLogout = () => {
+    dispatch(logout());
+    navigate(`/auth/login`);
+  };
+
+  const authButtonMenu = () =>
+
+  !isLoggedIn && (
+      <span className="ms-auto mt-3 mt-lg-0  d-block me-5">
+        <Link className="btn btn-primary shadow-sm me-2 btn" to={"auth/login"}>
+          s'identifier
+        </Link>
+        <Link className="btn btn-white shadow-sm  btn" to={"auth/register"}>
+          s'inscrire
+        </Link>
+      </span> )
+    ;
+
   return (
     <nav className="bg-white navbar p-2 navbar-default py-2 navbar navbar-expand-lg navbar-light">
       <div className="px-0 ps-2 container-fluid">
@@ -37,20 +68,8 @@ const Navbar = () => {
             />
           </form>
           <div className="navbar-nav navbar-right-wrap ms-auto d-flex nav-top-wrap navbar-nav">
-            <span className="ms-auto mt-3 mt-lg-0  d-block me-5">
-              <Link
-                className="btn btn-primary shadow-sm me-2 btn"
-                to={"auth/login"}
-              >
-                s'identifier
-              </Link>
-              <Link
-                className="btn btn-white shadow-sm  btn"
-                to={"auth/register"}
-              >
-                s'inscrire
-              </Link>
-            </span>
+            {authButtonMenu()}
+
             <span className="d-flex">
               <div className="mt-2 me-0 dropdown nav-item">
                 <a
@@ -314,7 +333,7 @@ const Navbar = () => {
                     <i className="fe fe-settings me-2" /> paramètres
                   </a>
                   <hr className="dropdown-divider" />
-                  <a className="mb-3 dropdown-item" href="/">
+                  <a className="mb-3 dropdown-item" onClick={() => onLogout()}>
                     <i className="fe fe-power me-2" /> Se déconnecter
                   </a>
                 </div>
